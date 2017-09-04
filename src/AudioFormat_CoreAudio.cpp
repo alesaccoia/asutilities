@@ -182,7 +182,12 @@ bool AudioFormat_CoreAudio::loadFile(const std::string& path,
     return false;
   }
   
-  AudioBufferList* convertedData = reinterpret_cast<AudioBufferList*>(new Byte[offsetof (AudioBufferList, mBuffers) + ((numberOfChannels == 1 ? 0 : numberOfChannels) * sizeof(AudioBuffer))]);
+  AudioBufferList* convertedData;
+  if (numberOfChannels == 1) {
+    convertedData = reinterpret_cast<AudioBufferList*>(new Byte[sizeof (AudioBufferList)]);
+  } else {
+    convertedData = reinterpret_cast<AudioBufferList*>(new Byte[offsetof (AudioBufferList, mBuffers) + (numberOfChannels * sizeof(AudioBuffer))]);
+  }
   convertedData->mNumberBuffers = numberOfChannels;
   for ( int i=0; i<numberOfChannels; i++ ) {
     convertedData->mBuffers[i].mNumberChannels = 1;
@@ -190,7 +195,10 @@ bool AudioFormat_CoreAudio::loadFile(const std::string& path,
     if (fileFormat.mFormatID == ASU_FORMAT_AAC) {
      convertedData->mBuffers[i].mData = (void*)aacBuffer[i];
     } else {
-     convertedData->mBuffers[i].mData = (void*)buffer.getChannelData(i);
+      if (numberOfChannels == 1)
+        convertedData->mBuffers[i].mData = (void*)buffer.data[0];
+      else
+        convertedData->mBuffers[i].mData = (void*)buffer.getChannelData(i);
     }
   }
 
