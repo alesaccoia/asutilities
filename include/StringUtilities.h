@@ -240,7 +240,8 @@ inline std::string getFilenameFromPath(const std::string filePath_, bool removeE
   return tokens[tokens.size() - 1];
 }
 
-inline int getFilesInDirectory(std::vector<std::string> &out_paths, const std::string& directory, const std::string& extension)
+template <template<typename...> class ContainerT = std::vector>
+inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::string& directory, const std::string& extension)
 {
 	DIR *dir;
 	class dirent *ent;
@@ -259,7 +260,7 @@ inline int getFilesInDirectory(std::vector<std::string> &out_paths, const std::s
 			
 			if (is_directory)
 			{
-				std::vector<std::string> results;
+				ContainerT<std::string> results;
 				getFilesInDirectory(results, full_file_name, extension);
 				for (int i=0;i<results.size();i++)
 					out_paths.push_back(results[i]);
@@ -403,8 +404,58 @@ inline void createDirectory(std::string path, bool emptyIfExists = true) {
   }
 }
 
+bool is_not_digit(char c)
+{
+    return !std::isdigit(c);
+}
+
+bool numeric_string_compare(const std::string& s1, const std::string& s2)
+{
+
+    std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
+
+    if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
+        int n1, n2;
+        std::stringstream ss(s1);
+        ss >> n1;
+        ss.clear();
+        ss.str(s2);
+        ss >> n2;
+
+        if (n1 != n2) return n1 < n2;
+
+        it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
+        it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
+    }
+
+    return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
+}
 
 
+bool numeric_file_compare(const std::string& string1, const std::string& string2)
+{
+    // handle empty strings...
+    const string s1(getFilenameFromPath(string1, true));
+    const string s2(getFilenameFromPath(string2, true));
+
+    std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
+
+    if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
+        int n1, n2;
+        std::stringstream ss(s1);
+        ss >> n1;
+        ss.clear();
+        ss.str(s2);
+        ss >> n2;
+
+        if (n1 != n2) return n1 < n2;
+
+        it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
+        it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
+    }
+
+    return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
+}
 
 }}
 
