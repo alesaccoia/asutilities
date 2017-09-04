@@ -1,0 +1,77 @@
+# -------------------------------------------------------------------------------------------
+# ASU_PLATFORM_IOS
+# ASU_PLATFORM_OSX
+# ASU_PLATFORM_LINUX
+# ASU_PLATFORM_ANDROID
+#
+# Author: Alessandro Saccoia <alessandro@dinahmoe.com>
+# --------------------------------------------------------------------------------------------
+
+FUNCTION(SET_PLATFORM_DEFINES)
+#  IF(NOT DEFINED PLATFORM_DEFINES_SET)
+    IF (APPLE)
+      IF(NOT DEFINED BUILD_FOR)
+        SET(BUILD_FOR "osx" CACHE INTERNAL "Flag to specify cross compiling on mac OS")
+        SET(ASU_IS_DESKTOP 1 CACHE INTERNAL "Specifies that the build is for a desktop system")
+        MESSAGE("BUILD_FOR not specified. defaulting to osx")
+      ENDIF(NOT DEFINED BUILD_FOR)
+      IF("${BUILD_FOR}" STREQUAL "ios" )
+        IF(NOT DEFINED IOS_ARCH)
+          SET(IOS_ARCH "arm" CACHE INTERNAL "Flag to specify ios build type")
+          MESSAGE("IOS_ARCH not specified. defaulting to arm")
+          SET(IOS_ARCH "arm")
+        ENDIF(NOT DEFINED IOS_ARCH)
+        
+        IF("${IOS_ARCH}" STREQUAL "arm" )
+          ADD_DEFINITIONS("-DASU_PLATFORM_IOS_ARM=1")
+        ELSEIF("${IOS_ARCH}" STREQUAL "simulator" )
+          ADD_DEFINITIONS("-DASU_PLATFORM_IOS_SIMULATOR=1")
+        ENDIF()
+
+        ADD_DEFINITIONS("-DASU_PLATFORM_IOS=1")
+      ELSEIF("${BUILD_FOR}" STREQUAL "tvos" )
+        MESSAGE("Building for Apple TV :))))")
+        IF(NOT DEFINED TVOS_ARCH)
+          SET(TVOS_ARCH "arm" CACHE INTERNAL "Flag to specify TVos build type")
+          MESSAGE("TVOS_ARCH not specified. defaulting to arm")
+          SET(TVOS_ARCH "arm")
+        ENDIF(NOT DEFINED TVOS_ARCH)
+        
+        IF("${TVOS_ARCH}" STREQUAL "arm" )
+          ADD_DEFINITIONS("-DASU_PLATFORM_TVOS_ARM=1")
+        ELSEIF("${TVOS_ARCH}" STREQUAL "simulator" )
+          ADD_DEFINITIONS("-DASU_PLATFORM_TVOS_SIMULATOR=1")
+        ENDIF()
+        ADD_DEFINITIONS("-DASU_PLATFORM_TVOS=1")
+      ELSEIF("${BUILD_FOR}" STREQUAL "osx")	
+        ADD_DEFINITIONS("-DASU_PLATFORM_OSX=1")
+        SET(ASU_IS_DESKTOP 1 CACHE INTERNAL "Specifies that the build is for a desktop system")
+      ENDIF() 
+      ADD_DEFINITIONS("-DASU_PLATFORM_APPLE=1")
+    ELSEIF(ANDROID)
+      SET(BUILD_FOR "android" CACHE INTERNAL "Flag to specify cross compiling on mac OS")
+      ADD_DEFINITIONS("-DASU_PLATFORM_ANDROID=1")
+    ELSEIF(WIN32) # cygwin
+      SET(ASU_IS_DESKTOP 1 CACHE INTERNAL "Specifies that the build is for a desktop system")
+      ADD_DEFINITIONS("-DASU_PLATFORM_CYGWIN=1")
+    ELSEIF(UNIX)
+      SET(ASU_IS_DESKTOP 1 CACHE INTERNAL "Specifies that the build is for a desktop system")
+      IF(NOT DEFINED BUILD_FOR)
+        ADD_DEFINITIONS("-DASU_PLATFORM_LINUX=1")
+      ENDIF()
+      IF("${BUILD_FOR}" STREQUAL "raspberrypi" )
+        ADD_DEFINITIONS("-DASU_PLATFORM_RASPBERRYPI=1")
+      ENDIF()
+    ELSEIF(LINUX)
+      SET(ASU_IS_DESKTOP 1 CACHE INTERNAL "Specifies that the build is for a desktop system")
+      IF(NOT DEFINED BUILD_FOR)
+        ADD_DEFINITIONS("-DASU_PLATFORM_LINUX=1")
+      ENDIF()
+      IF("${BUILD_FOR}" STREQUAL "raspberrypi" )
+        ADD_DEFINITIONS("-DASU_PLATFORM_RASPBERRYPI=1")
+      ENDIF()
+    ENDIF()
+    SET(PLATFORM_DEFINES_SET TRUE CACHE INTERNAL "Indicates wether this file has been executed or not" )
+#  ENDIF(NOT DEFINED PLATFORM_DEFINES_SET)
+ENDFUNCTION()
+

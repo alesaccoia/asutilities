@@ -1,0 +1,18 @@
+# Created by Alessandro Saccoia on 17/3/2014
+
+# see the guidelines for FindXXX.cmake files at the page
+# http://www.cmake.org/pipermail/cmake/2009-December/034228.html
+
+FIND_PACKAGE(PkgConfig)
+PKG_CHECK_MODULES(PC_PJLIB QUIET libpjproject)
+SET(PJLIB_DEFINITIONS ${PC_PJLIB_CFLAGS_OTHER})
+SET(PJLIB_INCLUDE_DIRS ${PC_PJLIB_INCLUDE_DIRS})
+SET(PJLIB_LIBRARY_DIRS ${PC_PJLIB_LIBRARY_DIRS})
+
+IF (NOT ${PC_PJLIB_FOUND})
+  ERROR(FATAL "pkg-config cannot find the pjlib libraries")
+ENDIF(NOT ${PC_PJLIB_FOUND})
+
+MESSAGE(STATUS ${PJLIB_DEFINITIONS})
+MESSAGE(STATUS ${PJLIB_INCLUDEDIRS})
+MESSAGE(STATUS ${PJLIB_LIBRARYDIRS})
