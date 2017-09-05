@@ -30,6 +30,8 @@
 #ifndef Project_AudioFormatOptions_hpp
 #define Project_AudioFormatOptions_hpp
 
+#include <deque>
+
 namespace asu {
 namespace assets {
 
@@ -49,8 +51,7 @@ struct WAVOptions {
 };
 
 struct AIFFOptions {
-
-
+  std::deque<unsigned long> markers;
 };
 
 }

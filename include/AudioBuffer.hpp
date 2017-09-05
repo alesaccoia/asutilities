@@ -421,6 +421,17 @@ public:
     usedChannels = 1;
   }
   
+  std::unique_ptr<FTYPE[]> deinterleave() {
+    std::unique_ptr<FTYPE[]> toReturn(new float[usedSize * usedChannels]);
+    unsigned int currentOutputSample = 0;
+    for (int nSample = 0; nSample < usedSize; ++nSample) {
+      for (int nChannel = 0; nChannel < usedChannels; ++nChannel) {
+        toReturn.operator[](currentOutputSample++) = data[nChannel][nSample];
+      }
+    }
+    return toReturn;
+  }
+  
   AudioBufferC& operator=(const float value) {
     isSilent = true;
     channels = 1;

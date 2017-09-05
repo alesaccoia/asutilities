@@ -183,7 +183,7 @@
 					"'ASU_PLATFORM_APPLE=1'",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/\"";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -201,7 +201,7 @@
 				PRODUCT_NAME = asutilities;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = "/Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/projects/xcode-mac";
+				SYMROOT = build;
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -229,7 +229,7 @@
 					"'ASU_PLATFORM_APPLE=1'",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/\"";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -247,7 +247,7 @@
 				PRODUCT_NAME = asutilities;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = "/Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/projects/xcode-mac";
+				SYMROOT = build;
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -284,7 +284,7 @@
 					"'ASU_PLATFORM_APPLE=1'",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/\"";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -301,7 +301,7 @@
 				PRODUCT_NAME = asutilities;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = "/Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/projects/xcode-mac";
+				SYMROOT = build;
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -329,7 +329,7 @@
 					"'ASU_PLATFORM_APPLE=1'",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/include;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/\"";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -347,7 +347,7 @@
 				PRODUCT_NAME = asutilities;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = "/Volumes/Data/WORK/alsc/Projects/current/alsc/asutilities/projects/xcode-mac";
+				SYMROOT = build;
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",

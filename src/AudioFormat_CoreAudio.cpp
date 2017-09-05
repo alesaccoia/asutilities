@@ -42,6 +42,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioToolbox/ExtendedAudioFile.h>
+#include "AudioFormatOptions.hpp"
 
 #include <iostream>
 
@@ -311,13 +312,13 @@ bool AudioFormat_CoreAudio::writeFile(const std::string& path,
   /////////////////////////////////////////////////////////////////////////////
 
   // create the audio file reference
-  ExtAudioFileRef audiofileRef;
+  AudioFileID audiofileRef;
 
   // create a fileURL from our path
   CFURLRef fileURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,fPath,kCFURLPOSIXPathStyle,false);
 
   // open the file for writing
-  err = ExtAudioFileCreateWithURL((CFURLRef)fileURL, fileType, &clientFormat, NULL, kAudioFileFlags_EraseFile, &audiofileRef);
+  err = AudioFileCreateWithURL((CFURLRef)fileURL, fileType, &clientFormat, kAudioFileFlags_EraseFile, &audiofileRef);
 
   if (err != noErr)
   {
@@ -331,12 +332,35 @@ bool AudioFormat_CoreAudio::writeFile(const std::string& path,
   /////////////////////////////////////////////////////////////////////////////
 
   // Tell the ExtAudioFile API what format we'll be sending samples in 
-  err = ExtAudioFileSetProperty(audiofileRef, kExtAudioFileProperty_ClientDataFormat, sizeof(localFormat), &localFormat);
+  err = AudioFileSetProperty(audiofileRef, kAudioFilePropertyDataFormat, sizeof(localFormat), &localFormat);
 
   if (err != noErr) {
     std::cerr << "Problem setting audio format: " << err << "\n";
     return false;
   }
+  
+  if (format_ == ASU_FORMAT_AIFF && formatDetail_ != NULL) {
+    AIFFOptions* options = (AIFFOptions*)formatDetail_;
+    if (options->markers.size()) {
+      // for some of this, see
+      // https://developer.apple.com/library/content/qa/qa1527/_index.html
+      size_t length = NumAudioFileMarkersToNumBytes(options->markers.size());
+      AudioFileMarkerList* markersList;
+      markersList = reinterpret_cast<AudioFileMarkerList*>(new Byte[length]);
+      markersList->mSMPTE_TimeType = kCAF_SMPTE_TimeTypeNone;
+      for (unsigned int mi = 0; mi < options->markers.size(); ++mi) {
+        markersList->mMarkers[mi].mFramePosition = options->markers[mi];
+        markersList->mMarkers[mi].mType = kCAFMarkerType_Generic;
+        markersList->mMarkers[mi].mMarkerID = mi;
+        
+        memset(&markersList->mMarkers[mi].mSMPTETime, 0, sizeof(markersList->mMarkers[mi].mSMPTETime)); // zero out; not used
+        markersList->mMarkers[mi].mName = NULL;     // not  used
+        markersList->mMarkers[mi].mChannel = 0;     // not  used
+      }
+      err = AudioFileSetProperty(audiofileRef, kAudioFilePropertyMarkerList, length, markersList);
+    }
+  }
+  
 
   /////////////////////////////////////////////////////////////////////////////
   ///////// Write the Contents of the AudioBufferList to the AudioFile ////////
@@ -346,45 +370,15 @@ bool AudioFormat_CoreAudio::writeFile(const std::string& path,
   /////////////////////////////////////////////////////////////////////////////
 
 
+
   int channelCount = buffer.channels;
-
-  AudioSampleType* tempBuffer = new AudioSampleType[BUFFER_SIZE * channelCount];
-  AudioBufferList bufferList;
-  bufferList.mNumberBuffers = 1;
-  bufferList.mBuffers[0].mNumberChannels = buffer.channels;
-  bufferList.mBuffers[0].mData = tempBuffer;
-  bufferList.mBuffers[0].mDataByteSize = BUFFER_SIZE * sizeof (AudioUnitSampleType) * channelCount;
+  unsigned long numFrames = buffer.usedSize;
+  UInt32 sizeOfBuffer = numFrames * sizeof(float);
   
-  // todo: interleaving sucks!
-  // can use the accelerate framework ctoz for this!
-
-  size_t count = 0;
-  size_t running = 0;
-  while(running < buffer.usedSize) {
-    count = std::min((size_t)BUFFER_SIZE, (size_t)buffer.usedSize - running);
-    for (int i = 0,  ii = 0; i < count; ++i, ++running) {
-      for (int chan = 0; chan < buffer.channels; ++chan) {
-        tempBuffer[ii++] = *(buffer.data[chan] + running);
-      }
-    }
-    bufferList.mBuffers[0].mDataByteSize = count * sizeof (AudioUnitSampleType) * channelCount;
-    err = ExtAudioFileWrite(audiofileRef, count, &bufferList);
-    if (err != noErr) {
-      std::cerr << "Problem writing audio file: " << err << "\n";
-      ExtAudioFileDispose(audiofileRef);
-      return false;
-    }
-  }
-
-  delete tempBuffer;
-
-  /////////////////////////////////////////////////////////////////////////////
-  ////////////// Close the Audio File and Get Rid Of The Reference ////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  // close the file
-  ExtAudioFileDispose(audiofileRef);
-
+  auto deinterleaved = buffer.deinterleave();
+  
+  err = AudioFileWriteBytes(audiofileRef, false, 0, &sizeOfBuffer, (void*)deinterleaved.get());
+  err = AudioFileClose(audiofileRef);
 
   return true;
 }

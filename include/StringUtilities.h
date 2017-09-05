@@ -404,12 +404,12 @@ inline void createDirectory(std::string path, bool emptyIfExists = true) {
   }
 }
 
-bool is_not_digit(char c)
+inline bool is_not_digit(char c)
 {
     return !std::isdigit(c);
 }
 
-bool numeric_string_compare(const std::string& s1, const std::string& s2)
+inline bool numeric_string_compare(const std::string& s1, const std::string& s2)
 {
 
     std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
@@ -432,7 +432,7 @@ bool numeric_string_compare(const std::string& s1, const std::string& s2)
 }
 
 
-bool numeric_file_compare(const std::string& string1, const std::string& string2)
+inline bool numeric_file_compare(const std::string& string1, const std::string& string2)
 {
     // handle empty strings...
     const string s1(getFilenameFromPath(string1, true));
