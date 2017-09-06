@@ -240,6 +240,14 @@ inline std::string getFilenameFromPath(const std::string filePath_, bool removeE
   return tokens[tokens.size() - 1];
 }
 
+inline std::string getFilePathWithoutFilename(const std::string filePath_) {
+  std::vector<std::string> tokens = tokenize(filePath_, "/");
+  std::stringstream s;
+  s << "/";
+  std::copy(tokens.begin(),tokens.end() - 1, std::ostream_iterator<std::string>(s,"/"));
+  return s.str();
+}
+
 template <template<typename...> class ContainerT = std::vector>
 inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::string& directory, const std::string& extension)
 {
