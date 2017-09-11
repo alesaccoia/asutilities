@@ -419,50 +419,61 @@ inline bool is_not_digit(char c)
 
 inline bool numeric_string_compare(const std::string& s1, const std::string& s2)
 {
+  std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
 
-    std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
+  if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
+    int n1, n2;
+    std::stringstream ss(s1);
+    ss >> n1;
+    ss.clear();
+    ss.str(s2);
+    ss >> n2;
 
-    if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
-        int n1, n2;
-        std::stringstream ss(s1);
-        ss >> n1;
-        ss.clear();
-        ss.str(s2);
-        ss >> n2;
+    if (n1 != n2) return n1 < n2;
 
-        if (n1 != n2) return n1 < n2;
+    it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
+    it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
+  }
 
-        it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
-        it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
-    }
-
-    return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
+  return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
 }
 
+// maskLength is the number of digits that represent a number with file names like file_001.wav, file_002.wav
 
-inline bool numeric_file_compare(const std::string& string1, const std::string& string2)
+typedef struct numeric_file_compare {
+  numeric_file_compare(int maskLength = -1) : mMaskLength(maskLength) {}
+  inline bool operator()(const std::string& string1, const std::string& string2);
+  int mMaskLength;
+} numeric_file_compare;
+
+inline bool numeric_file_compare::operator()(const std::string& string1, const std::string& string2)
 {
-    // handle empty strings...
-    const string s1(getFilenameFromPath(string1, true));
-    const string s2(getFilenameFromPath(string2, true));
+  auto tmp1(getFilenameFromPath(string1, true));
+  auto tmp2(getFilenameFromPath(string2, true));
+  if (mMaskLength > 0) {
+    tmp1 = tmp1.substr(tmp1.length() - mMaskLength - 1);
+    tmp2 = tmp2.substr(tmp2.length() - mMaskLength - 1);
+  }
+  const string s1(tmp1);
+  const string s2(tmp2);
 
-    std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
+  std::string::const_iterator it1 = s1.begin(), it2 = s2.begin();
 
-    if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
-        int n1, n2;
-        std::stringstream ss(s1);
-        ss >> n1;
-        ss.clear();
-        ss.str(s2);
-        ss >> n2;
+  if (std::isdigit(s1[0]) && std::isdigit(s2[0])) {
+    int n1, n2;
+    std::stringstream ss(s1);
+    ss >> n1;
+    ss.clear();
+    ss.str(s2);
+    ss >> n2;
 
-        if (n1 != n2) return n1 < n2;
+    if (n1 != n2) return n1 < n2;
 
-        it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
-        it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
-    }
+    it1 = std::find_if(s1.begin(), s1.end(), is_not_digit);
+    it2 = std::find_if(s2.begin(), s2.end(), is_not_digit);
+  }
 
-    return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
+  return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
 }
 
 // https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
