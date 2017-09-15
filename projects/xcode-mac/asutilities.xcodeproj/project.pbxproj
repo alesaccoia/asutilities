@@ -26,6 +26,7 @@
 		CA22AD8B0D524EEAA17C2094 /* AudioFormatsManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = AudioFormatsManager.cpp; path = src/AudioFormatsManager.cpp; sourceTree = SOURCE_ROOT; };
 		E026B8596C624DD4AFAB3A06 /* AudioFormat_CoreAudio.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = AudioFormat_CoreAudio.hpp; path = src/AudioFormat_CoreAudio.hpp; sourceTree = SOURCE_ROOT; };
 		F19F6A63A8D04EC7A555D3BC /* UtilityClasses.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = UtilityClasses.h; path = include/UtilityClasses.h; sourceTree = SOURCE_ROOT; };
+		FAE18E471F6BB34C00843580 /* MathUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MathUtilities.h; path = include/MathUtilities.h; sourceTree = "<group>"; };
 		FE53381AC0F24D629A7A22C4 /* libasutilities.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libasutilities.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -51,6 +52,7 @@
 				F19F6A63A8D04EC7A555D3BC /* UtilityClasses.h */,
 				E026B8596C624DD4AFAB3A06 /* AudioFormat_CoreAudio.hpp */,
 				84C38BE4A33C4399AA17B798 /* AudioFormat_ogg.hpp */,
+				FAE18E471F6BB34C00843580 /* MathUtilities.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";

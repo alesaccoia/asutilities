@@ -46,6 +46,8 @@
 #include <cmath>
 #include <random>
 
+#include "MathUtilities.h"
+
 #ifdef USE_SAMPLERATE
 #include "samplerate.h"
 #endif
@@ -316,6 +318,32 @@ public:
 
   AudioBufferC& operator+= (const AudioBufferC& rhs) {
     assert(false);
+  }
+  
+  void findPeak (size_t* index, FTYPE* val, size_t startPosition, size_t endPosition) {
+    *val = std::numeric_limits<FTYPE>::min();
+    size_t tempIndex(-1);
+    FTYPE tempVal(0);
+    for (int ch = 0; ch < usedChannels; ++ch) {
+      tempIndex = max_index( data[ch] + startPosition, endPosition - startPosition, &tempVal );
+      if (tempVal > *val) {
+        *val = tempVal;
+        *index = tempIndex;
+      }
+    }
+    *index += startPosition;
+  }
+  
+  size_t findZeroCrossing(size_t startPosition, size_t before_sample, size_t in_channel) {
+    if (before_sample < startPosition + 2) {
+      return 0;
+    }
+    int ci(before_sample);
+    --ci;
+    while (ci >= startPosition && data[in_channel][ci] * data[in_channel][ci+1] > 0 ) {
+      --ci;
+    }
+    return (ci < startPosition) ? startPosition : ci;
   }
   
   #ifdef USE_SAMPLERATE
