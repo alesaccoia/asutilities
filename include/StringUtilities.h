@@ -254,6 +254,9 @@ inline std::string getFilenameFromPath(const std::string filePath_, bool removeE
 
 inline std::string getFilePathWithoutFilename(const std::string filePath_) {
   std::vector<std::string> tokens = tokenize(filePath_, "/");
+  if (tokens.size() == 1) {
+    return "";
+  }
   std::stringstream s;
   s << "/";
   std::copy(tokens.begin(),tokens.end() - 1, std::ostream_iterator<std::string>(s,"/"));
@@ -376,14 +379,15 @@ inline void importDataFromFile(std::string fileName, std::deque<std::vector<floa
 	}
 }
 
-
-inline void saveDataToFile(std::string filename, std::vector<std::vector<float>> data, std::string elementSeparator = "\n", bool separateRows = false){
+template <class FTYPE>
+inline void saveDataToFile(std::string filename, std::vector<std::vector<FTYPE>> data, std::string elementSeparator = "\n", bool separateRows = false){
   std::string directory = filename;
   std::ofstream file_write(directory.c_str());
   for(int i=0; i < data.size(); i++)
   {
-      for(int j = 0; j < data[i].size(); j++) // Number of features
+      for(int j = 0; j < data[i].size() -1; j++) // Number of features
         file_write << data[i][j] << elementSeparator;
+      file_write << data[i].back();
       if (separateRows)
         file_write << std::endl;
   }
