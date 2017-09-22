@@ -25,6 +25,7 @@
 #include <cassert>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 #include <dirent.h>
 #include <stdexcept>
 #include <sys/stat.h>
@@ -65,6 +66,17 @@ inline ContainerT<std::string> tokenize(const std::string & str, const std::stri
     p0 = str.find_first_not_of(delim, p1);
   }
   return tokens;
+}
+
+std::string substringFromCharacter(const std::string& input, const std::string & delim) {
+  return input.substr(input.find(delim) + 1);
+}
+
+long long millisecondsSinceEpoch() {
+  std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+      std::chrono::system_clock::now().time_since_epoch()
+  );
+  return ms.count();
 }
 
 inline std::string concat(const std::vector<std::string>& tokens_, const std::string & delim_, size_t sIndex_, size_t eIndex_) {
@@ -249,7 +261,7 @@ inline std::string getFilePathWithoutFilename(const std::string filePath_) {
 }
 
 template <template<typename...> class ContainerT = std::vector>
-inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::string& directory, const std::string& extension)
+inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::string& directory, const std::string& extension, std::vector<std::string> exclude = {})
 {
 	DIR *dir;
 	class dirent *ent;
@@ -270,13 +282,19 @@ inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::st
 			{
 				ContainerT<std::string> results;
 				getFilesInDirectory(results, full_file_name, extension);
-				for (int i=0;i<results.size();i++)
-					out_paths.push_back(results[i]);
+				for (int i=0;i<results.size();i++) {
+          if (find(exclude.begin(), exclude.end(), results[i]) == exclude.end()) {
+            out_paths.push_back(results[i]);
+          }
+        }
 			}
 			else
 			{
-				if ( strstr( ent->d_name, extension.c_str()))
-					out_paths.push_back(full_file_name);
+				if ( strstr( ent->d_name, extension.c_str())) {
+          if (find(exclude.begin(), exclude.end(), file_name) == exclude.end()) {
+            out_paths.push_back(full_file_name);
+          }
+        }
 			}
 		}
 		closedir (dir);
