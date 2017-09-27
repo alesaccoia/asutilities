@@ -114,6 +114,22 @@ bool AudioFormatsManager::writeFile(const std::string& path_,
   }
   return formatForFile->second->writeFile(path_, buffer_, samplingRate_, format_);
 }
+
+bool AudioFormatsManager::getFileInfo(const std::string& path_,
+  AudioFormatTypes& format_,
+  float& samplingRate_,
+  unsigned int& numberOfChannels_,
+  unsigned int& bitsPerChannel_,
+  unsigned long& length_) {
   
+  std::string extension = utilities::getFileExtension(path_);
+  auto formatForFile = m_formatsForReading.find(extensionToAudioFormat(extension.c_str()));
+  if (formatForFile == m_formatsForReading.end()) {
+    std::cerr << "No decoder for file " << path_ << std::endl;
+    return false;
+  }
+  format_ = formatForFile->first;
+  return formatForFile->second->getFileInfo(path_, samplingRate_, numberOfChannels_, bitsPerChannel_, length_);
+}
 
 }}

@@ -43,15 +43,20 @@ public:
   bool loadFile(const std::string& path,
     AudioBuffer& buffer,
     float& samplingRate,
-    void** formatDetail_ = NULL);
+    void** formatDetail_ = NULL) override;
 
   // the format specifies the type, not the extension!
   bool writeFile(const std::string& path,
     AudioBuffer& buffer,
     const float samplingRate,
     const AudioFormatTypes format_,
-    const void* formatDetail_ = nullptr);
+    const void* formatDetail_ = nullptr) override;
 
+  bool getFileInfo(const std::string& path,
+    float& samplingRate,
+    unsigned int& numberOfChannels_,
+    unsigned int& bitsPerChannel,
+    unsigned long& length_) override;
 };
 
 }

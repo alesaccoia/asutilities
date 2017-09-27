@@ -383,6 +383,50 @@ bool AudioFormat_CoreAudio::writeFile(const std::string& path,
   return true;
 }
 
+bool AudioFormat_CoreAudio::getFileInfo(const std::string& path,
+    float& samplingRate_,
+    unsigned int& numberOfChannels_,
+    unsigned int& bitsPerChannel_,
+    unsigned long& length_) {
+    
+  ExtAudioFileRef audioFileObject = 0;
+  CFStringRef filePathString(CFStringCreateWithCString(kCFAllocatorDefault, path.c_str(), kCFStringEncodingUTF8));
+  CFURLRef url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, filePathString, kCFURLPOSIXPathStyle, false));
+  CFRelease(filePathString);
+  if (!url) 
+      return false;
+
+  ExtAudioFileOpenURL(url, &audioFileObject);
+  CFRelease(url);
+	AudioStreamBasicDescription fileFormat;
+	UInt32 propSize = sizeof(fileFormat);
+	memset(&fileFormat, 0, sizeof(AudioStreamBasicDescription)); 
+  
+  // get various properties including sampling rate
+  // 
+	OSStatus err = ExtAudioFileGetProperty(audioFileObject, kExtAudioFileProperty_FileDataFormat, &propSize, &fileFormat);  
+  if (noErr != err) {
+    return false;
+  }
+  
+  samplingRate_ = fileFormat.mSampleRate; // SR... the channels are already in the buffer
+  numberOfChannels_ = fileFormat.mChannelsPerFrame; // ---CHANNELS---
+  bitsPerChannel_ = fileFormat.mBitsPerChannel;
+  
+  SInt64 numberOfFrames64 = 0; // ---FRAMES---
+  propSize = sizeof(numberOfFrames64);
+  err = ExtAudioFileGetProperty(audioFileObject, kExtAudioFileProperty_FileLengthFrames, &propSize, &numberOfFrames64);  
+  if (noErr != err) {
+    return false;
+  }
+  
+  length_ = numberOfFrames64;
+  
+  ExtAudioFileDispose(audioFileObject);
+  
+  return true;
+  
+}
 
 }
 }

@@ -68,11 +68,11 @@ inline ContainerT<std::string> tokenize(const std::string & str, const std::stri
   return tokens;
 }
 
-std::string substringFromCharacter(const std::string& input, const std::string & delim) {
+inline std::string substringFromCharacter(const std::string& input, const std::string & delim) {
   return input.substr(input.find(delim) + 1);
 }
 
-long long millisecondsSinceEpoch() {
+inline long long millisecondsSinceEpoch() {
   std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
       std::chrono::system_clock::now().time_since_epoch()
   );

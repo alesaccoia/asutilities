@@ -54,6 +54,13 @@ public:
     const AudioFormatTypes format_,
     const void* formatDetail_ = nullptr);
   
+  bool getFileInfo(const std::string& path,
+    AudioFormatTypes& format_,
+    float& samplingRate,
+    unsigned int& numberOfChannels_,
+    unsigned int& bitsPerChannel,
+    unsigned long& length);
+  
 private:
   void addFormat(std::shared_ptr<AudioFormat> fmt);
 

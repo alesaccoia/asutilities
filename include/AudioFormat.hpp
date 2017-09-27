@@ -52,6 +52,14 @@ public:
     const AudioFormatTypes format_,
     const void* formatDetail_ = nullptr) = 0;
 
+  virtual bool getFileInfo(const std::string& path,
+    float& samplingRate,
+    unsigned int& numberOfChannels_,
+    unsigned int& bitsPerChannel,
+    unsigned long& length_) {
+    assert("Unimplemented for this format"); // todo
+    return false;
+  }
   std::vector<AudioFormatTypes>& getSupportedFormatsForReading() { return m_supportedFormatsForReading; }
   std::vector<AudioFormatTypes>& getSupportedFormatsForWriting() { return m_supportedFormatsForWriting; }
 protected:
