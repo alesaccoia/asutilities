@@ -37,10 +37,12 @@
 #else
     #include <unistd.h>
     #define GetCurrentDir getcwd
-    #ifdef ASU_PLATFORM_OSX
+    #ifdef __APPLE__
     #include <sys/types.h>
     #include <pwd.h>
     #include <uuid/uuid.h>
+    #include <mach-o/dyld.h>
+    #include <limits.h>		/* PATH_MAX */
     #endif
 #endif
 
@@ -536,6 +538,41 @@ inline std::string trim_copy(std::string s, const char* t = " \t\n\r\f\v")
 {
     return trim(s, t);
 }
+
+inline string getExecutablePath() {
+#ifdef __APPLE__
+  char pathbuf[PATH_MAX + 1];
+	unsigned int  bufsize = sizeof(pathbuf);
+	_NSGetExecutablePath( pathbuf, &bufsize);
+  return pathbuf;
+#endif
+  return "Not supported";
+}
+
+
+inline string getCwd() {
+#ifdef __APPLE__
+  char pathbuf[PATH_MAX + 1];
+	unsigned int  bufsize = sizeof(pathbuf);
+	getcwd(pathbuf, bufsize);
+  return pathbuf;
+#endif
+  return "Not supported";
+}
+
+
+inline string makeAbsolutePath(string path, string relativeToFile = "") {
+  if (!isAbsolute(path)) {
+    if (relativeToFile.empty()) {
+      return getCwd() + "/" + path;
+    } else {
+      return getFilePathWithoutFilename(relativeToFile) + "/" + path;
+    }
+  } else {
+    return path;
+  }
+}
+
 
 }}
 
