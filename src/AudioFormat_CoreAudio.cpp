@@ -371,7 +371,6 @@ bool AudioFormat_CoreAudio::writeFile(const std::string& path,
 
 
 
-  int channelCount = buffer.channels;
   unsigned long numFrames = buffer.usedSize;
   UInt32 sizeOfBuffer = numFrames * sizeof(float);
   

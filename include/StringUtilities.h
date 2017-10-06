@@ -269,8 +269,8 @@ template <template<typename...> class ContainerT = std::vector>
 inline int getFilesInDirectory(ContainerT<std::string> &out_paths, const std::string& directory, const std::string& extension, std::vector<std::string> exclude = {})
 {
 	DIR *dir;
-	class dirent *ent;
-	class stat st;
+	struct dirent *ent;
+	struct stat st;
 	
 	if ((dir = opendir (directory.c_str())) != NULL)
 	{
