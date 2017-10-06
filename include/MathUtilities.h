@@ -9,6 +9,8 @@
 #ifndef MathUtilities_h
 #define MathUtilities_h
 
+#include <cmath>
+
 namespace asu {
 
 template <class DataT>
