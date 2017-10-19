@@ -26,6 +26,8 @@
 		CA22AD8B0D524EEAA17C2094 /* AudioFormatsManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = AudioFormatsManager.cpp; path = src/AudioFormatsManager.cpp; sourceTree = SOURCE_ROOT; };
 		E026B8596C624DD4AFAB3A06 /* AudioFormat_CoreAudio.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = AudioFormat_CoreAudio.hpp; path = src/AudioFormat_CoreAudio.hpp; sourceTree = SOURCE_ROOT; };
 		F19F6A63A8D04EC7A555D3BC /* UtilityClasses.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = UtilityClasses.h; path = include/UtilityClasses.h; sourceTree = SOURCE_ROOT; };
+		FAB041CC1F98F6C70081B759 /* ConfigurationParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ConfigurationParser.h; path = include/ConfigurationParser.h; sourceTree = "<group>"; };
+		FAB5450A1F97AA0900788DA1 /* asutilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = asutilities.h; path = include/asutilities.h; sourceTree = "<group>"; };
 		FAE18E471F6BB34C00843580 /* MathUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MathUtilities.h; path = include/MathUtilities.h; sourceTree = "<group>"; };
 		FE53381AC0F24D629A7A22C4 /* libasutilities.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libasutilities.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -47,12 +49,14 @@
 				BDD5ADA17E9C40B9A55B753E /* AudioFormatOptions.hpp */,
 				6FB044787AC44FBD8335DFC8 /* AudioFormatTypes.h */,
 				99F178655B1145D3B31A618C /* AudioFormatsManager.hpp */,
+				FAB041CC1F98F6C70081B759 /* ConfigurationParser.h */,
 				6F30EDBE491D40039AA3EDF7 /* DataStructureUtilities.h */,
 				3E7E2E6D5033463B9E490BCA /* StringUtilities.h */,
 				F19F6A63A8D04EC7A555D3BC /* UtilityClasses.h */,
 				E026B8596C624DD4AFAB3A06 /* AudioFormat_CoreAudio.hpp */,
 				84C38BE4A33C4399AA17B798 /* AudioFormat_ogg.hpp */,
 				FAE18E471F6BB34C00843580 /* MathUtilities.h */,
+				FAB5450A1F97AA0900788DA1 /* asutilities.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
