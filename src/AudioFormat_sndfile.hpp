@@ -10,7 +10,7 @@
 
 #include "AudioFormat.hpp"
 
-namespace dinahmoe {
+namespace asu {
 namespace assets {
 
 class AudioFormat_sndfile : public AudioFormat {

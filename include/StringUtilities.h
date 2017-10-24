@@ -29,7 +29,7 @@
 #include <dirent.h>
 #include <stdexcept>
 #include <sys/stat.h>
-
+#include <iterator>
 
 #ifdef WINDOWS
     #include <direct.h>

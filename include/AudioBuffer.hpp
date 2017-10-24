@@ -45,7 +45,7 @@
 #include <cassert>
 #include <cmath>
 #include <random>
-
+#include <memory>
 #include "MathUtilities.h"
 
 #ifdef USE_SAMPLERATE

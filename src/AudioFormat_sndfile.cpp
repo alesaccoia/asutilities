@@ -14,15 +14,15 @@ void LibsndfileCopyright()
 }
 
 
-namespace dinahmoe {
+namespace asu {
 namespace assets {
 
 AudioFormat_sndfile::AudioFormat_sndfile() {
   LibsndfileCopyright();
-  m_supportedFormatsForReading.push_back(DM_FORMAT_WAV);
-  m_supportedFormatsForReading.push_back(DM_FORMAT_AIFF);
-  m_supportedFormatsForWriting.push_back(DM_FORMAT_WAV);
-  m_supportedFormatsForWriting.push_back(DM_FORMAT_AIFF);
+  m_supportedFormatsForReading.push_back(ASU_FORMAT_WAV);
+  m_supportedFormatsForReading.push_back(ASU_FORMAT_AIFF);
+  m_supportedFormatsForWriting.push_back(ASU_FORMAT_WAV);
+  m_supportedFormatsForWriting.push_back(ASU_FORMAT_AIFF);
 }
 
 #define BUFFER_SIZE 512
@@ -105,9 +105,9 @@ bool AudioFormat_sndfile::writeFile(const std::string& path,
   info.channels = buffer.channels;
   info.frames = buffer.size;
   info.format = 0;
-  if (format_ == DM_FORMAT_WAV) {
+  if (format_ == ASU_FORMAT_WAV) {
     info.format = SF_FORMAT_WAV;
-  } else if (format_ == DM_FORMAT_AIFF) {
+  } else if (format_ == ASU_FORMAT_AIFF) {
     info.format = SF_FORMAT_AIFF;
   }
   info.format = info.format | SF_FORMAT_PCM_16;

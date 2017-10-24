@@ -32,15 +32,11 @@ MESSAGE(STATUS "Configuring asutilities")
 OPTION(APPLE_DONT_USE_QUICKTIME "Excludes core audio but uses the rest on apple" OFF)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-INCLUDE(SetTargetOptions)
-INCLUDE(SetPlatformDefines)
-SET_PLATFORM_DEFINES()
-SET(compile_options "")
 
 IF(DEFINED USE_SAMPLERATE)
   INCLUDE(FindSampleRate)
   MESSAGE(STATUS "****************** Using LibSampleRate -> GPL LICENSE! *******************")
-  SET(compile_options "${compile_options} -DASUTILITIES_USE_SAMPLERATE=1 ")
+  ADD_DEFINITIONS(-DASUTILITIES_USE_SAMPLERATE)
 ENDIF()
 
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/include/")                         
@@ -54,7 +50,7 @@ IF (APPLE AND NOT APPLE_DONT_USE_QUICKTIME)
   LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_CoreAudio.hpp)
   LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_CoreAudio.cpp)
   SET(ASUTILITIES_LINK_FLAGS "${ASUTILITIES_LINK_FLAGS} -framework AudioToolbox -framework CoreFoundation" CACHE INTERNAL "Linker flags for dm_audiomidi" )
-  SET(compile_options "${compile_options} -DASUTILITIES_USE_COREAUDIO=1 ")
+  ADD_DEFINITIONS(-DASUTILITIES_USE_COREAUDIO)
 ENDIF(APPLE AND NOT APPLE_DONT_USE_QUICKTIME)
 
 ### OGG ### <- always added
@@ -63,10 +59,11 @@ LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_ogg.cpp
 LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_ogg.hpp)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_ogg.cpp PROPERTIES COMPILE_FLAGS "-Wno-unused-value -Wno-sign-compare -Wno-all")
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/stb_vorbis.c PROPERTIES COMPILE_FLAGS "-Wno-unused-value -Wno-sign-compare -Wno-all")
-SET(compile_options "${compile_options} -DASUTILITIES_USE_OGG=1 ")
+
+ADD_DEFINITIONS(-DASUTILITIES_USE_OGG)
 
 ### AAC ###
-IF ((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME)
+IF (FALSE)
   MESSAGE(STATUS "asutilities: Using FDK AAc -> MIT-STYLE LICENSE")
   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/fdk-aac/)
   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/fdk-aac/libAACdec/include)
@@ -81,10 +78,9 @@ IF ((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME)
   ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/fdk-aac/ "fdk-aac")
   LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_aac.cpp)
   LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_aac.hpp)
-  SET(compile_options "${compile_options} -DASUTILITIES_USE_AAC=1 ")
   SET(ASUTILITIES_EXTRA_LIBS ${ASU_LIBFDK_AAC_LIBS} CACHE INTERNAL "Libraries for asutilities")
-ENDIF ((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME)
-
+  ADD_DEFINITIONS(-DASUTILITIES_USE_AAC)
+ENDIF()
 ### SNDFILE ###
 IF ((NOT ANDROID) AND((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME))
   INCLUDE(FindSndFile)
@@ -98,7 +94,8 @@ IF ((NOT ANDROID) AND((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME))
     ENDIF(WIN32)
     LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_sndfile.cpp)
     LIST(APPEND ASUTILITIES_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormat_sndfile.hpp)
-    SET(compile_options "${compile_options} -DASUTILITIES_USE_SNDFILE=1 ")
+  
+    ADD_DEFINITIONS(-DASUTILITIES_USE_SNDFILE)
     MESSAGE(${ASUTILITIES_LINK_FLAGS})
   ELSE(SNDFILE_FOUND)
     MESSAGE(FATAL_ERROR "Libsoundfile not found, don't use FORCE_SOUNDFILE")
@@ -107,14 +104,12 @@ ENDIF ((NOT ANDROID) AND((NOT APPLE) OR APPLE_DONT_USE_QUICKTIME))
 
 # INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../dm-utils/include)
 
-MESSAGE(STATUS ${compile_options})
 
 ADD_LIBRARY(asutilities
     ${include_f}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioFormatsManager.cpp
     ${ASUTILITIES_SRCS})
 # TARGET_LINK_LIBRARIES(asutilities ${ASUTILITIES_EXTRA_LIBS})
-
-FSET_TARGET_OPTIONS(asutilities ${compile_options})
+SET_PROPERTY(TARGET asutilities PROPERTY CXX_STANDARD 11)
 
 ADD_SUBDIRECTORY(test EXCLUDE_FROM_ALL)
