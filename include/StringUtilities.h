@@ -395,6 +395,19 @@ inline void saveDataToFile(std::string filename, std::vector<std::vector<FTYPE>>
   }
   file_write.close();
 }
+
+
+template <class FTYPE>
+inline void saveDataToFile(std::string filename, std::vector<FTYPE> data, std::string elementSeparator = "\n"){
+  std::string directory = filename;
+  std::ofstream file_write(directory.c_str());
+  for(int i=0; i < data.size(); i++)
+  {
+    file_write << data[i] << elementSeparator;
+  }
+  file_write.close();
+}
+
 inline void saveDataToFile(std::string filename, std::deque<std::vector<float>> data, std::string elementSeparator = "\n", bool separateRows = false){
   std::string directory = filename;
   std::ofstream file_write(directory.c_str());
