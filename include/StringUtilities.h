@@ -207,6 +207,7 @@ inline std::string GetCurrentUser() {
         }
     }
 */
+#ifndef CURSES
 inline int getch(void) {
   int c=0;
 #ifndef ASU_PLATFORM_CYGWIN
@@ -226,6 +227,7 @@ inline int getch(void) {
 #endif
 return(c);
 }
+#endif
 // throws exception
 inline std::string getFileContentAsString(std::string path_) {
   std::ifstream ifs(path_.c_str());
@@ -586,6 +588,31 @@ inline string makeAbsolutePath(string path, string relativeToFile = "") {
   }
 }
 
+
+class TermDeletableLine {
+ public:
+  
+  TermDeletableLine(ostream& stream_) : stream(stream_) {}
+  
+  void print(string s) {
+    currentString = s;
+    stream << currentString;
+  }
+  
+  void clear() {
+    for (unsigned int cr = 0u; cr < currentString.size(); ++cr) {
+      stream << "\b";
+    }
+  }
+  
+  void reset() {
+    currentString = "";
+  }
+  
+ private:
+  string currentString;
+  ostream& stream;
+};
 
 }}
 
