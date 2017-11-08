@@ -566,7 +566,7 @@ inline string getExecutablePath() {
 
 
 inline string getCwd() {
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__linux__)
   char pathbuf[PATH_MAX + 1];
 	unsigned int  bufsize = sizeof(pathbuf);
 	getcwd(pathbuf, bufsize);
