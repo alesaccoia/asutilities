@@ -11,7 +11,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include <fstream>
-
+#include <algorithm>
 
 using namespace std;
 
