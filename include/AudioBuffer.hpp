@@ -386,6 +386,15 @@ public:
     usedChannels = usedChannels_;
   }
   
+  void requantize(unsigned int toBits) {
+    unsigned int halfRange = pow(2,toBits-1);
+    for(unsigned int nChannel = 0; nChannel < usedChannels; ++nChannel) {
+      for(unsigned int sample = 0; sample < usedSize; ++sample) {
+        data[nChannel][sample] = (int)(data[nChannel][sample] * halfRange) / (float)halfRange;
+      }
+    }
+  }
+  
   void normalize() {
     if (usedChannels < 1) return;
     FTYPE maximum, max, min;
