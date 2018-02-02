@@ -516,6 +516,13 @@ inline bool numeric_file_compare::operator()(const std::string& string1, const s
   return std::lexicographical_compare(it1, s1.end(), it2, s2.end());
 }
 
+inline unsigned long long GetFileSize(std::string filename)
+{
+  struct stat stat_buf;
+  int rc = stat(filename.c_str(), &stat_buf);
+  return rc == 0 ? stat_buf.st_size : -1;
+}
+
 // https://stackoverflow.com/questions/1798112/removing-leading-and-trailing-spaces-from-a-string
 
 // trim from left
