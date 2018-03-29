@@ -354,7 +354,15 @@ inline float splitToFloat(const string& s, char c)
 {
 	return atof(s.c_str());
 }
-
+  
+template <template<typename...> class ContainerT1 = std::vector, template<typename...> class ContainerT2 = std::vector, class ContainedT>
+size_t containedElements(ContainerT1<ContainerT2<ContainedT>>& ctn) {
+  size_t count(0);
+  for (auto& el: ctn) {
+    count += el.size();
+  }
+  return count;
+}
 
 
 inline void importDataFromFile(std::string fileName, std::vector<float>& result, const char splitter = ' ')
